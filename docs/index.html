@@ -2,132 +2,310 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morphine Equivalence Calculator</title>
-    <!-- Include Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    
+    <!-- SEO -->
+    <title>MEQ Calculator — Morphine Equivalence</title>
+    <meta name="description" content="A professional Morphine Equivalence Calculator (MEQ) for clinical use. Convert opioid doses to morphine equivalents quickly and accurately.">
+    <meta name="keywords" content="morphine equivalence, MEQ, opioid conversion, methadone, fentanyl, hydromorphone, oxycodone">
+    
+    <!-- iOS PWA / Add to Home Screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MEQ Calc">
+    <link rel="apple-touch-icon" href="icon-180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
+    
+    <!-- Splash screens for iPhone -->
+    <meta name="apple-mobile-web-app-orientations" content="portrait">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    
+    <!-- Prevent text size adjustment on orientation change -->
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4 text-center">Morphine Equivalence Calculator</h1>
-        <div class="card">
-            <div class="card-body">
-                <!-- Input sections organized in fixed columns -->
-                <div class="row">
-                    <div class="col-6">
-                        <!-- Drug inputs -->
-                        <div class="form-group">
-                            <label for="hmo">Hydromorphone Oral: </label>
-                            <input type="number" class="form-control" id="hmo" placeholder="Daily dose (mg)">
-                        </div>
-                        <div class="form-group">
-                            <label for="hmiv">Hydromorphone IV: </label>
-                            <input type="number" class="form-control" id="hmiv" placeholder="Daily dose (mg)">
-                        </div>
-                        <div class="form-group">
-                            <label for="kadian">Morphine - Oral: </label>
-                            <input type="number" class="form-control" id="kadian" placeholder="Daily dose (mg)">
-                        </div>
-                        <div class="form-group">
-                            <label for="methadone">Methadone: </label>
-                            <input type="number" class="form-control" id="methadone" placeholder="Daily dose (mg)">
-                        </div>
-                        <div class="form-group">
-                            <label for="fentanyl">Fentanyl - Transdermal:</label>
-                            <input type="number" class="form-control" id="fentanyl" placeholder="Daily dose (mcg/hr)">
-                        </div>
-                        <div class="form-group">
-                            <label for="oxycodone">Oxycodone - Oral:</label>
-                            <input type="number" class="form-control" id="oxycodone" placeholder="Daily dose (mg)">
-                        </div>
-                     <!-- NEW: Sufentanil Input -->
-                        <div class="form-group">
-                            <label for="sufentanil">Sufentanil - IV/SC:</label>
-                            <input type="number" class="form-control" id="sufentanil" placeholder="Daily dose (mcg)">
-                        </div>
-                    <!-- New Sufentanil Input-->
+    <!-- iOS Status Bar Spacer -->
+    <div class="status-bar-spacer"></div>
+    
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="url(#headerGrad)"/>
+                    <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7z" fill="url(#headerGrad)"/>
+                    <defs>
+                        <linearGradient id="headerGrad" x1="2" y1="2" x2="22" y2="22">
+                            <stop offset="0%" stop-color="#06b6d4"/>
+                            <stop offset="100%" stop-color="#3b82f6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>MEQ Calculator</h1>
+                <p class="header-subtitle">Morphine Equivalence</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main" id="appMain">
+        <!-- Total MEQ Display (Sticky) -->
+        <div class="total-bar" id="totalBar">
+            <div class="total-bar-inner">
+                <div class="total-bar-content">
+                    <span class="total-label">Total MEQ</span>
+                    <span class="total-value" id="subtotal">0 mg</span>
+                </div>
+                <div class="total-bar-glow"></div>
+            </div>
+        </div>
+
+        <!-- Drug Input Cards -->
+        <div class="cards-container">
+
+            <!-- Hydromorphone Oral -->
+            <div class="drug-card" id="card-hmo">
+                <div class="drug-card-header">
+                    <span class="drug-name">Hydromorphone Oral</span>
+                    <span class="drug-factor">×4</span>
+                </div>
+                <div class="drug-card-body">
+                    <div class="input-group">
+                        <input type="number" inputmode="decimal" class="dose-input" id="hmo" placeholder="0" aria-label="Hydromorphone Oral daily dose in mg">
+                        <span class="input-unit">mg</span>
                     </div>
-                    <div class="col-6">
-                        <!-- Morphine equivalents outputs -->
-                        <div class="form-group">
-                            <label for="m0">MEQ:</label>
-                            <input type="number" class="form-control" id="m0" placeholder="Morphine Equivalent" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="m1">MEQ:</label>
-                            <input type="number" class="form-control" id="m1" placeholder="Morphine Equivalent" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="m2">MEQ:</label>
-                            <input type="number" class="form-control" id="m2" placeholder="Morphine Equivalent" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="m3">MEQ:</label>
-                            <input type="number" class="form-control" id="m3" placeholder="Morphine Equivalent" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="m4">MEQ:</label>
-                            <input type="number" class="form-control" id="m4" placeholder="Morphine Equivalent" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="m5">MEQ:</label>
-                            <input type="number" class="form-control" id="m5" placeholder="Morphine Equivalent" readonly>
-                        </div>
-                    <!-- NEW: Sufentanil Output -->
-                        <div class="form-group">
-                            <label for="m7">MEQ:</label>
-                            <input type="number" class="form-control" id="m7" placeholder="Morphine Equivalent" readonly>
-                        </div>
-                    <!-- NEW: Sufentanil Output -->
-                    </div>
-                    <!-- Total Morphine Equivalence -->
-                    <div class="col-12 mt-3">
-                        <div class="alert alert-info" role="alert">
-                            Total Morphine Equivalence in mg: <strong id="subtotal">0</strong>
-                        </div>
+                    <div class="meq-output">
+                        <span class="meq-value" id="m0">0</span>
+                        <span class="meq-unit">mg MEQ</span>
                     </div>
                 </div>
-                <!-- Street Fentanyl Group -->
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Street Fentanyl Conversion</h5>
-                        <div class="row">
-                            <div class="col-md-4 col-12">
-                                <label for="SfentanylPts">Points:</label>
-                                <input type="number" class="form-control fentanyl-input" id="SfentanylPts" placeholder="Enter points">
-                            </div>
-                            <div class="col-md-4 col-12">
-                                <label for="SfentanylPct">Percentage (%):</label>
-                                <input type="number" class="form-control fentanyl-input" id="SfentanylPct" placeholder="4.4% (Default)" value="4.4">
-                            </div>
-                            <div class="col-md-4 col-12">
-                                <label for="m6">MEQ:</label>
-                                <input type="number" class="form-control fentanyl-input" id="m6" placeholder="Morphine Equivalent" readonly>
-                            </div>
-                        </div>
+            </div>
+
+            <!-- Hydromorphone IV -->
+            <div class="drug-card" id="card-hmiv">
+                <div class="drug-card-header">
+                    <span class="drug-name">Hydromorphone IV</span>
+                    <span class="drug-factor">×5</span>
+                </div>
+                <div class="drug-card-body">
+                    <div class="input-group">
+                        <input type="number" inputmode="decimal" class="dose-input" id="hmiv" placeholder="0" aria-label="Hydromorphone IV daily dose in mg">
+                        <span class="input-unit">mg</span>
+                    </div>
+                    <div class="meq-output">
+                        <span class="meq-value" id="m1">0</span>
+                        <span class="meq-unit">mg MEQ</span>
                     </div>
                 </div>
-                <!-- Action buttons -->
-                <div class="row mt-4">
-                    <div class="col-12 text-center">
-                        <button id="resetButton" class="btn btn-secondary">Reset</button>
-                        <button id="printButton" class="btn btn-primary">Print Results</button>
+            </div>
+
+            <!-- Morphine Oral -->
+            <div class="drug-card" id="card-kadian">
+                <div class="drug-card-header">
+                    <span class="drug-name">Morphine — Oral</span>
+                    <span class="drug-factor">×1</span>
+                </div>
+                <div class="drug-card-body">
+                    <div class="input-group">
+                        <input type="number" inputmode="decimal" class="dose-input" id="kadian" placeholder="0" aria-label="Morphine Oral daily dose in mg">
+                        <span class="input-unit">mg</span>
+                    </div>
+                    <div class="meq-output">
+                        <span class="meq-value" id="m2">0</span>
+                        <span class="meq-unit">mg MEQ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Methadone -->
+            <div class="drug-card" id="card-methadone">
+                <div class="drug-card-header">
+                    <span class="drug-name">Methadone</span>
+                    <span class="drug-factor">×4–12</span>
+                </div>
+                <div class="drug-card-body">
+                    <div class="input-group">
+                        <input type="number" inputmode="decimal" class="dose-input" id="methadone" placeholder="0" aria-label="Methadone daily dose in mg">
+                        <span class="input-unit">mg</span>
+                    </div>
+                    <div class="meq-output">
+                        <span class="meq-value" id="m3">0</span>
+                        <span class="meq-unit">mg MEQ</span>
+                    </div>
+                </div>
+                <div class="drug-card-note">
+                    <span>1–20mg: ×4 · 21–40mg: ×8 · 41–60mg: ×10 · 61+mg: ×12</span>
+                </div>
+            </div>
+
+            <!-- Fentanyl Transdermal -->
+            <div class="drug-card" id="card-fentanyl">
+                <div class="drug-card-header">
+                    <span class="drug-name">Fentanyl — Transdermal</span>
+                    <span class="drug-factor">×4</span>
+                </div>
+                <div class="drug-card-body">
+                    <div class="input-group">
+                        <input type="number" inputmode="decimal" class="dose-input" id="fentanyl" placeholder="0" aria-label="Fentanyl Transdermal daily dose in mcg/hr">
+                        <span class="input-unit">mcg/hr</span>
+                    </div>
+                    <div class="meq-output">
+                        <span class="meq-value" id="m4">0</span>
+                        <span class="meq-unit">mg MEQ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Oxycodone Oral -->
+            <div class="drug-card" id="card-oxycodone">
+                <div class="drug-card-header">
+                    <span class="drug-name">Oxycodone — Oral</span>
+                    <span class="drug-factor">×1.5</span>
+                </div>
+                <div class="drug-card-body">
+                    <div class="input-group">
+                        <input type="number" inputmode="decimal" class="dose-input" id="oxycodone" placeholder="0" aria-label="Oxycodone Oral daily dose in mg">
+                        <span class="input-unit">mg</span>
+                    </div>
+                    <div class="meq-output">
+                        <span class="meq-value" id="m5">0</span>
+                        <span class="meq-unit">mg MEQ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sufentanil IV/SC -->
+            <div class="drug-card" id="card-sufentanil">
+                <div class="drug-card-header">
+                    <span class="drug-name">Sufentanil — IV/SC</span>
+                    <span class="drug-factor">×3</span>
+                </div>
+                <div class="drug-card-body">
+                    <div class="input-group">
+                        <input type="number" inputmode="decimal" class="dose-input" id="sufentanil" placeholder="0" aria-label="Sufentanil IV/SC daily dose in mcg">
+                        <span class="input-unit">mcg</span>
+                    </div>
+                    <div class="meq-output">
+                        <span class="meq-value" id="m7">0</span>
+                        <span class="meq-unit">mg MEQ</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <footer class="mt-4 py-3 text-center">
-        <div class="container">
-            <p>Disclaimer: The information provided by the Morphine Equivalence Calculator is for general informational purposes only...<a href="#disclaimer">Read more</a></p>
-            <p>Privacy Policy: This website collects no personal data from its users, except for...<a href="#privacy">Read more</a></p>
-            <p>Terms of Use: By using our website, you agree to comply with and be bound by our terms of use...<a href="#terms">Read more</a></p>
-            <p>Accessibility Statement: We are committed to ensuring digital accessibility for people with disabilities...<a href="#accessibility">Read more</a></p>
-            <p>If you have any questions or concerns about our tool, please contact us at <a href="mailto:MECConversion@gmail.com">MECConversion@gmail.com</a>.</p>
+
+        <!-- Divider -->
+        <div class="section-divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">Street Fentanyl</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- Street Fentanyl Section -->
+        <div class="street-fentanyl-card">
+            <div class="street-fentanyl-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Street Fentanyl Conversion</span>
+            </div>
+            <div class="street-fentanyl-body">
+                <div class="sf-input-row">
+                    <div class="sf-field">
+                        <label for="SfentanylPts">Points</label>
+                        <div class="input-group">
+                            <input type="number" inputmode="decimal" class="dose-input fentanyl-input" id="SfentanylPts" placeholder="0" aria-label="Street Fentanyl points">
+                            <span class="input-unit">pts</span>
+                        </div>
+                    </div>
+                    <div class="sf-field">
+                        <label for="SfentanylPct">Percentage</label>
+                        <div class="input-group">
+                            <input type="number" inputmode="decimal" class="dose-input fentanyl-input" id="SfentanylPct" placeholder="4.4" value="4.4" aria-label="Street Fentanyl percentage">
+                            <span class="input-unit">%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sf-result">
+                    <span class="sf-result-label">Street Fentanyl MEQ</span>
+                    <div class="meq-output sf-meq">
+                        <span class="meq-value" id="m6">0</span>
+                        <span class="meq-unit">mg MEQ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grand Total -->
+        <div class="grand-total-card">
+            <div class="grand-total-inner">
+                <div class="grand-total-content">
+                    <span class="grand-total-label">Total with Street Fentanyl</span>
+                    <span class="grand-total-value" id="totalMorphine">0 mg</span>
+                </div>
+                <div class="grand-total-glow"></div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button id="resetButton" class="btn-action btn-reset" aria-label="Reset all fields">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 12a9 9 0 1 1 9 9 9.75 9.75 0 0 1-6.18-2.18L3 21V15h6l-2.72 2.72A7.5 7.5 0 1 0 4.5 12H3z" fill="currentColor"/>
+                </svg>
+                <span>Reset</span>
+            </button>
+            <button id="printButton" class="btn-action btn-print" aria-label="Print results">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" fill="currentColor"/>
+                </svg>
+                <span>Print</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div class="footer-section" id="disclaimer">
+                <h3>Disclaimer</h3>
+                <p>The information provided by the Morphine Equivalence Calculator is for general informational purposes only. It should not be considered medical advice. Always consult a healthcare professional.</p>
+            </div>
+            <div class="footer-section" id="privacy">
+                <h3>Privacy Policy</h3>
+                <p>This website collects no personal data from its users, except for anonymized analytics through Vercel Web Analytics.</p>
+            </div>
+            <div class="footer-section" id="terms">
+                <h3>Terms of Use</h3>
+                <p>By using our website, you agree to comply with and be bound by our terms of use.</p>
+            </div>
+            <div class="footer-section" id="accessibility">
+                <h3>Accessibility</h3>
+                <p>We are committed to ensuring digital accessibility for people with disabilities.</p>
+            </div>
+            <div class="footer-contact">
+                <p>Questions? <a href="mailto:MECConversion@gmail.com">MECConversion@gmail.com</a></p>
+            </div>
         </div>
     </footer>
+
+    <!-- Safe Area Bottom Spacer for iOS -->
+    <div class="safe-area-bottom"></div>
+
     <script src="conversion.js"></script>
 </body>
 </html>
