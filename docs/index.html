@@ -149,17 +149,26 @@
             <div class="drug-card" id="card-fentanyl">
                 <div class="drug-card-header">
                     <span class="drug-name">Fentanyl — Transdermal</span>
-                    <span class="drug-factor">×4</span>
+                    <div class="drug-header-actions">
+                        <div class="unit-toggle" id="fentanyl-unit-toggle" role="group" aria-label="Fentanyl unit toggle">
+                            <button type="button" class="unit-toggle-btn active" data-unit="mcg" id="fentanyl-toggle-mcg" aria-pressed="true">mcg/hr</button>
+                            <button type="button" class="unit-toggle-btn" data-unit="patches" id="fentanyl-toggle-patches" aria-pressed="false">patches</button>
+                        </div>
+                        <span class="drug-factor" id="fentanyl-factor">×4</span>
+                    </div>
                 </div>
                 <div class="drug-card-body">
                     <div class="input-group">
-                        <input type="number" inputmode="decimal" class="dose-input" id="fentanyl" placeholder="0" aria-label="Fentanyl Transdermal daily dose in mcg/hr">
-                        <span class="input-unit">mcg/hr</span>
+                        <input type="number" inputmode="decimal" step="any" class="dose-input" id="fentanyl" placeholder="0" aria-label="Fentanyl Transdermal daily dose in mcg/hr">
+                        <span class="input-unit" id="fentanyl-unit-label">mcg/hr</span>
                     </div>
                     <div class="meq-output">
                         <span class="meq-value" id="m4">0</span>
                         <span class="meq-unit">mg MEQ</span>
                     </div>
+                </div>
+                <div class="drug-card-note" id="fentanyl-note" style="display: none;">
+                    <span>1 patch = 50 mcg/hr (×200 MEQ per patch)</span>
                 </div>
             </div>
 

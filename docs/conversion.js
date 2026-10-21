@@ -78,6 +78,62 @@ function setHmoUnit(unit, convertValue = true) {
     updateMorphineEquivalence();
 }
 
+// Unit state for Fentanyl Transdermal (default: mcg/hr; 1 patch = 50 mcg/hr)
+let currentFentanylUnit = 'mcg';
+
+function setFentanylUnit(unit, convertValue = true) {
+    if (unit !== 'mcg' && unit !== 'patches') return;
+    if (currentFentanylUnit === unit && convertValue) return;
+
+    const oldUnit = currentFentanylUnit;
+    currentFentanylUnit = unit;
+
+    const fentanylInput = document.getElementById('fentanyl');
+    const unitLabel = document.getElementById('fentanyl-unit-label');
+    const factorLabel = document.getElementById('fentanyl-factor');
+    const noteEl = document.getElementById('fentanyl-note');
+    const mcgBtn = document.getElementById('fentanyl-toggle-mcg');
+    const patchesBtn = document.getElementById('fentanyl-toggle-patches');
+
+    if (unit === 'patches') {
+        mcgBtn?.classList.remove('active');
+        mcgBtn?.setAttribute('aria-pressed', 'false');
+        patchesBtn?.classList.add('active');
+        patchesBtn?.setAttribute('aria-pressed', 'true');
+        
+        if (unitLabel) unitLabel.textContent = 'patches';
+        if (factorLabel) factorLabel.textContent = '×200 (50 mcg/hr)';
+        if (noteEl) noteEl.style.display = 'block';
+        if (fentanylInput) fentanylInput.setAttribute('aria-label', 'Fentanyl Transdermal daily dose in 50 mcg/hr patches');
+    } else {
+        patchesBtn?.classList.remove('active');
+        patchesBtn?.setAttribute('aria-pressed', 'false');
+        mcgBtn?.classList.add('active');
+        mcgBtn?.setAttribute('aria-pressed', 'true');
+        
+        if (unitLabel) unitLabel.textContent = 'mcg/hr';
+        if (factorLabel) factorLabel.textContent = '×4';
+        if (noteEl) noteEl.style.display = 'none';
+        if (fentanylInput) fentanylInput.setAttribute('aria-label', 'Fentanyl Transdermal daily dose in mcg/hr');
+    }
+
+    // Convert value if currently populated
+    if (convertValue && fentanylInput && fentanylInput.value !== '') {
+        const val = parseFloat(fentanylInput.value);
+        if (!isNaN(val) && val > 0) {
+            if (unit === 'patches' && oldUnit === 'mcg') {
+                // mcg/hr to patches (1 patch = 50 mcg/hr)
+                fentanylInput.value = Number((val / 50).toFixed(2));
+            } else if (unit === 'mcg' && oldUnit === 'patches') {
+                // patches to mcg/hr
+                fentanylInput.value = Number((val * 50).toFixed(2));
+            }
+        }
+    }
+
+    updateMorphineEquivalence();
+}
+
 // Reset all inputs and recalculate
 function resetInputs() {
     document.querySelectorAll('input[type="number"]').forEach(input => {
@@ -89,8 +145,9 @@ function resetInputs() {
         }
     });
     
-    // Reset Hydromorphone Oral unit to default (mg)
+    // Reset unit toggles to defaults
     setHmoUnit('mg', false);
+    setFentanylUnit('mcg', false);
     
     // Remove active state from all cards
     document.querySelectorAll('.drug-card').forEach(card => {
@@ -142,10 +199,11 @@ function updateMorphineEquivalence() {
     // Methadone: scaled multiplier (handled by methadoneMEQ helper)
     let m3 = Math.round(methadoneMEQ(methadone));
 
-    // Fentanyl Transdermal: dose × 4 (no negatives)
+    // Fentanyl Transdermal: dose × 4 (or 1 patch = 50 mcg/hr -> dose × 200)
+    let fentanylMcg = (currentFentanylUnit === 'patches') ? (fentanyl * 50) : fentanyl;
     let fentanylMEQ = 0;
-    if (fentanyl > 0) {
-        fentanylMEQ = fentanyl * 4;
+    if (fentanylMcg > 0) {
+        fentanylMEQ = fentanylMcg * 4;
     }
     let m4 = Math.round(fentanylMEQ);
 
@@ -247,6 +305,8 @@ function updateMEQHighlights(meqValues) {
 // Unit toggle button listeners
 document.getElementById('hmo-toggle-mg')?.addEventListener('click', () => setHmoUnit('mg'));
 document.getElementById('hmo-toggle-tabs')?.addEventListener('click', () => setHmoUnit('tablets'));
+document.getElementById('fentanyl-toggle-mcg')?.addEventListener('click', () => setFentanylUnit('mcg'));
+document.getElementById('fentanyl-toggle-patches')?.addEventListener('click', () => setFentanylUnit('patches'));
 
 // Attach input listeners to all number inputs
 document.querySelectorAll('input[type="number"]').forEach(input => {
