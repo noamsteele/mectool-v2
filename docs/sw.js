@@ -3,7 +3,7 @@
 // Enables offline support for PWA
 // ================================================
 
-const CACHE_NAME = 'meq-calc-v1';
+const CACHE_NAME = 'meq-calc-v2';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',

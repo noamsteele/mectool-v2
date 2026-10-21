@@ -54,18 +54,15 @@ document.getElementById('printButton').addEventListener('click', function() {
 function updateMorphineEquivalence() {
     // Read all input values
     let hmo = safeParseFloat(document.getElementById('hmo').value);
-    let hmiv = safeParseFloat(document.getElementById('hmiv').value);
     let kadian = safeParseFloat(document.getElementById('kadian').value);
     let methadone = safeParseFloat(document.getElementById('methadone').value);
     let fentanyl = safeParseFloat(document.getElementById('fentanyl').value);
     let oxycodone = safeParseFloat(document.getElementById('oxycodone').value);
-    let sufentanil = safeParseFloat(document.getElementById('sufentanil')?.value);
     let SfentanylPts = safeParseFloat(document.getElementById('SfentanylPts').value);
     let SfentanylPct = safeParseFloat(document.getElementById('SfentanylPct').value, 4.4);
 
     // ================================================
-    // CONVERSION CALCULATIONS — DO NOT MODIFY
-    // Each formula is identical to the original
+    // CONVERSION CALCULATIONS
     // ================================================
 
     // Hydromorphone Oral: dose × 4 (no negatives)
@@ -74,13 +71,6 @@ function updateMorphineEquivalence() {
         hmoMEQ = hmo * 4;
     }
     let m0 = Math.round(hmoMEQ);
-
-    // Hydromorphone IV: dose × 5 (no negatives)
-    let hmivMEQ = 0;
-    if (hmiv > 0) {
-        hmivMEQ = hmiv * 5;
-    }
-    let m1 = Math.round(hmivMEQ);
 
     // Morphine Oral (Kadian): dose × 1 (no negatives)
     let kadianMEQ = 0;
@@ -106,38 +96,25 @@ function updateMorphineEquivalence() {
     }
     let m5 = Math.round(oxycodoneMEQ);
 
-    // Sufentanil IV/SC: dose × 3 (1 mcg = 3 mg morphine)
-    let sufentanilMEQ = 0;
-    if (sufentanil > 0) {
-        sufentanilMEQ = sufentanil * 3;
-    }
-    let m7 = Math.round(sufentanilMEQ);
-
     // Street Fentanyl: Points × (Percentage × 100)
     let m6 = Math.round(SfentanylPts * (SfentanylPct * 100));
 
     // ================================================
-    // DISPLAY RESULTS — Updated for new DOM structure
+    // DISPLAY RESULTS
     // ================================================
     
     // Update MEQ display values
     document.getElementById('m0').textContent = m0;
-    document.getElementById('m1').textContent = m1;
     document.getElementById('m2').textContent = m2;
     document.getElementById('m3').textContent = m3;
     document.getElementById('m4').textContent = m4;
     document.getElementById('m5').textContent = m5;
     document.getElementById('m6').textContent = m6;
-    if (document.getElementById('m7')) {
-        document.getElementById('m7').textContent = m7;
-    }
 
-    // Calculate subtotal (all drugs except street fentanyl)
-    // ORIGINAL: subtotal = m0 + m1 + m2 + m3 + m4 + m5 + m7
-    let subtotal = m0 + m1 + m2 + m3 + m4 + m5 + m7;
+    // Calculate subtotal (all prescribed drugs)
+    let subtotal = m0 + m2 + m3 + m4 + m5;
     
     // Calculate total including street fentanyl
-    // ORIGINAL: totalMorphine = subtotal + m6
     let totalMorphine = subtotal + m6;
 
     // Update displays
@@ -156,18 +133,16 @@ function updateMorphineEquivalence() {
     // Update active states on cards based on input
     updateCardStates({
         'card-hmo': hmo,
-        'card-hmiv': hmiv,
         'card-kadian': kadian,
         'card-methadone': methadone,
         'card-fentanyl': fentanyl,
-        'card-oxycodone': oxycodone,
-        'card-sufentanil': sufentanil
+        'card-oxycodone': oxycodone
     });
     
     // Update MEQ value highlight states
     updateMEQHighlights({
-        'm0': m0, 'm1': m1, 'm2': m2, 'm3': m3,
-        'm4': m4, 'm5': m5, 'm6': m6, 'm7': m7
+        'm0': m0, 'm2': m2, 'm3': m3,
+        'm4': m4, 'm5': m5, 'm6': m6
     });
 }
 
