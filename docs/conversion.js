@@ -22,6 +22,62 @@ function safeParseFloat(value, defaultValue = 0) {
     return isNaN(parsed) ? defaultValue : parsed;
 }
 
+// Unit state for Hydromorphone Oral (default: mg; 1 tablet = 8mg)
+let currentHmoUnit = 'mg';
+
+function setHmoUnit(unit, convertValue = true) {
+    if (unit !== 'mg' && unit !== 'tablets') return;
+    if (currentHmoUnit === unit && convertValue) return;
+
+    const oldUnit = currentHmoUnit;
+    currentHmoUnit = unit;
+
+    const hmoInput = document.getElementById('hmo');
+    const unitLabel = document.getElementById('hmo-unit-label');
+    const factorLabel = document.getElementById('hmo-factor');
+    const noteEl = document.getElementById('hmo-note');
+    const mgBtn = document.getElementById('hmo-toggle-mg');
+    const tabsBtn = document.getElementById('hmo-toggle-tabs');
+
+    if (unit === 'tablets') {
+        mgBtn?.classList.remove('active');
+        mgBtn?.setAttribute('aria-pressed', 'false');
+        tabsBtn?.classList.add('active');
+        tabsBtn?.setAttribute('aria-pressed', 'true');
+        
+        if (unitLabel) unitLabel.textContent = 'tabs';
+        if (factorLabel) factorLabel.textContent = '×32 (8mg tab)';
+        if (noteEl) noteEl.style.display = 'block';
+        if (hmoInput) hmoInput.setAttribute('aria-label', 'Hydromorphone Oral daily dose in 8mg tablets');
+    } else {
+        tabsBtn?.classList.remove('active');
+        tabsBtn?.setAttribute('aria-pressed', 'false');
+        mgBtn?.classList.add('active');
+        mgBtn?.setAttribute('aria-pressed', 'true');
+        
+        if (unitLabel) unitLabel.textContent = 'mg';
+        if (factorLabel) factorLabel.textContent = '×4';
+        if (noteEl) noteEl.style.display = 'none';
+        if (hmoInput) hmoInput.setAttribute('aria-label', 'Hydromorphone Oral daily dose in mg');
+    }
+
+    // Convert value if currently populated
+    if (convertValue && hmoInput && hmoInput.value !== '') {
+        const val = parseFloat(hmoInput.value);
+        if (!isNaN(val) && val > 0) {
+            if (unit === 'tablets' && oldUnit === 'mg') {
+                // mg to tablets (1 tab = 8mg)
+                hmoInput.value = Number((val / 8).toFixed(2));
+            } else if (unit === 'mg' && oldUnit === 'tablets') {
+                // tablets to mg
+                hmoInput.value = Number((val * 8).toFixed(2));
+            }
+        }
+    }
+
+    updateMorphineEquivalence();
+}
+
 // Reset all inputs and recalculate
 function resetInputs() {
     document.querySelectorAll('input[type="number"]').forEach(input => {
@@ -32,6 +88,9 @@ function resetInputs() {
             input.value = '';
         }
     });
+    
+    // Reset Hydromorphone Oral unit to default (mg)
+    setHmoUnit('mg', false);
     
     // Remove active state from all cards
     document.querySelectorAll('.drug-card').forEach(card => {
@@ -65,10 +124,11 @@ function updateMorphineEquivalence() {
     // CONVERSION CALCULATIONS
     // ================================================
 
-    // Hydromorphone Oral: dose × 4 (no negatives)
+    // Hydromorphone Oral: dose × 4 (or 1 tablet = 8mg -> dose × 32)
+    let hmoMg = (currentHmoUnit === 'tablets') ? (hmo * 8) : hmo;
     let hmoMEQ = 0;
-    if (hmo > 0) {
-        hmoMEQ = hmo * 4;
+    if (hmoMg > 0) {
+        hmoMEQ = hmoMg * 4;
     }
     let m0 = Math.round(hmoMEQ);
 
@@ -183,6 +243,10 @@ function updateMEQHighlights(meqValues) {
 // ================================================
 // INITIALIZATION & EVENT LISTENERS
 // ================================================
+
+// Unit toggle button listeners
+document.getElementById('hmo-toggle-mg')?.addEventListener('click', () => setHmoUnit('mg'));
+document.getElementById('hmo-toggle-tabs')?.addEventListener('click', () => setHmoUnit('tablets'));
 
 // Attach input listeners to all number inputs
 document.querySelectorAll('input[type="number"]').forEach(input => {

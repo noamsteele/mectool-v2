@@ -82,17 +82,26 @@
             <div class="drug-card" id="card-hmo">
                 <div class="drug-card-header">
                     <span class="drug-name">Hydromorphone Oral</span>
-                    <span class="drug-factor">×4</span>
+                    <div class="drug-header-actions">
+                        <div class="unit-toggle" id="hmo-unit-toggle" role="group" aria-label="Hydromorphone unit toggle">
+                            <button type="button" class="unit-toggle-btn active" data-unit="mg" id="hmo-toggle-mg" aria-pressed="true">mg</button>
+                            <button type="button" class="unit-toggle-btn" data-unit="tablets" id="hmo-toggle-tabs" aria-pressed="false">tablets</button>
+                        </div>
+                        <span class="drug-factor" id="hmo-factor">×4</span>
+                    </div>
                 </div>
                 <div class="drug-card-body">
                     <div class="input-group">
-                        <input type="number" inputmode="decimal" class="dose-input" id="hmo" placeholder="0" aria-label="Hydromorphone Oral daily dose in mg">
-                        <span class="input-unit">mg</span>
+                        <input type="number" inputmode="decimal" step="any" class="dose-input" id="hmo" placeholder="0" aria-label="Hydromorphone Oral daily dose in mg">
+                        <span class="input-unit" id="hmo-unit-label">mg</span>
                     </div>
                     <div class="meq-output">
                         <span class="meq-value" id="m0">0</span>
                         <span class="meq-unit">mg MEQ</span>
                     </div>
+                </div>
+                <div class="drug-card-note" id="hmo-note" style="display: none;">
+                    <span>1 tablet = 8 mg (×32 MEQ per tablet)</span>
                 </div>
             </div>
 

@@ -252,6 +252,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .drug-name {
@@ -261,6 +263,49 @@ body {
     letter-spacing: -0.01em;
 }
 
+.drug-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.unit-toggle {
+    display: inline-flex;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+}
+
+.unit-toggle-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-family);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    line-height: 1.4;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.unit-toggle-btn:hover:not(.active) {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.unit-toggle-btn.active {
+    background: var(--accent-gradient);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(6, 182, 212, 0.25);
+}
+
 .drug-factor {
     font-size: var(--font-size-xs);
     font-weight: 500;
@@ -268,6 +313,7 @@ body {
     background: rgba(100, 116, 139, 0.12);
     padding: 2px 8px;
     border-radius: 6px;
+    white-space: nowrap;
 }
 
 .drug-card-body {
