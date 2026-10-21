@@ -35,7 +35,6 @@ function setHmoUnit(unit, convertValue = true) {
     const hmoInput = document.getElementById('hmo');
     const unitLabel = document.getElementById('hmo-unit-label');
     const factorLabel = document.getElementById('hmo-factor');
-    const noteEl = document.getElementById('hmo-note');
     const mgBtn = document.getElementById('hmo-toggle-mg');
     const tabsBtn = document.getElementById('hmo-toggle-tabs');
 
@@ -46,8 +45,7 @@ function setHmoUnit(unit, convertValue = true) {
         tabsBtn?.setAttribute('aria-pressed', 'true');
         
         if (unitLabel) unitLabel.textContent = 'tabs';
-        if (factorLabel) factorLabel.textContent = '×32 (8mg tab)';
-        if (noteEl) noteEl.style.display = 'block';
+        if (factorLabel) factorLabel.textContent = '×32';
         if (hmoInput) hmoInput.setAttribute('aria-label', 'Hydromorphone Oral daily dose in 8mg tablets');
     } else {
         tabsBtn?.classList.remove('active');
@@ -57,7 +55,6 @@ function setHmoUnit(unit, convertValue = true) {
         
         if (unitLabel) unitLabel.textContent = 'mg';
         if (factorLabel) factorLabel.textContent = '×4';
-        if (noteEl) noteEl.style.display = 'none';
         if (hmoInput) hmoInput.setAttribute('aria-label', 'Hydromorphone Oral daily dose in mg');
     }
 
@@ -91,7 +88,6 @@ function setFentanylUnit(unit, convertValue = true) {
     const fentanylInput = document.getElementById('fentanyl');
     const unitLabel = document.getElementById('fentanyl-unit-label');
     const factorLabel = document.getElementById('fentanyl-factor');
-    const noteEl = document.getElementById('fentanyl-note');
     const mcgBtn = document.getElementById('fentanyl-toggle-mcg');
     const patchesBtn = document.getElementById('fentanyl-toggle-patches');
 
@@ -102,8 +98,7 @@ function setFentanylUnit(unit, convertValue = true) {
         patchesBtn?.setAttribute('aria-pressed', 'true');
         
         if (unitLabel) unitLabel.textContent = 'patches';
-        if (factorLabel) factorLabel.textContent = '×200 (50 mcg/hr)';
-        if (noteEl) noteEl.style.display = 'block';
+        if (factorLabel) factorLabel.textContent = '×200';
         if (fentanylInput) fentanylInput.setAttribute('aria-label', 'Fentanyl Transdermal daily dose in 50 mcg/hr patches');
     } else {
         patchesBtn?.classList.remove('active');
@@ -113,7 +108,6 @@ function setFentanylUnit(unit, convertValue = true) {
         
         if (unitLabel) unitLabel.textContent = 'mcg/hr';
         if (factorLabel) factorLabel.textContent = '×4';
-        if (noteEl) noteEl.style.display = 'none';
         if (fentanylInput) fentanylInput.setAttribute('aria-label', 'Fentanyl Transdermal daily dose in mcg/hr');
     }
 
