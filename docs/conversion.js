@@ -44,7 +44,7 @@ function setHmoUnit(unit, convertValue = true) {
         tabsBtn?.classList.add('active');
         tabsBtn?.setAttribute('aria-pressed', 'true');
         
-        if (unitLabel) unitLabel.textContent = 'tabs';
+        if (unitLabel) unitLabel.textContent = 'tabs (8mg)';
         if (factorLabel) factorLabel.textContent = '×32';
         if (hmoInput) hmoInput.setAttribute('aria-label', 'Hydromorphone Oral daily dose in 8mg tablets');
     } else {
@@ -97,7 +97,7 @@ function setFentanylUnit(unit, convertValue = true) {
         patchesBtn?.classList.add('active');
         patchesBtn?.setAttribute('aria-pressed', 'true');
         
-        if (unitLabel) unitLabel.textContent = 'patches';
+        if (unitLabel) unitLabel.textContent = 'patches (50 mcg/hr)';
         if (factorLabel) factorLabel.textContent = '×200';
         if (fentanylInput) fentanylInput.setAttribute('aria-label', 'Fentanyl Transdermal daily dose in 50 mcg/hr patches');
     } else {
