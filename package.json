@@ -1,0 +1,10 @@
+{
+  "name": "mectool-v2",
+  "version": "2.0.0",
+  "private": true,
+  "description": "MEQ Calculator v2 — Morphine Equivalence",
+  "scripts": {
+    "dev": "npx -y serve docs -l 3000",
+    "start": "npx -y serve docs -l 3000"
+  }
+}
